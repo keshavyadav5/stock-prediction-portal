@@ -1,8 +1,11 @@
 import React from 'react'
+import { Button } from './components/ui/button'
 
 const App = () => {
   return (
-    <div>App</div>
+    <div>
+      <Button className='bg-green-400 cursor-pointer'>Click me </Button>
+    </div>
   )
 }
 
