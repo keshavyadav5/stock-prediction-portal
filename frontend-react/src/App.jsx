@@ -1,11 +1,12 @@
 import React from 'react'
-import { Button } from './components/ui/button'
+import { BrowserRouter } from 'react-router-dom'
+import Home from '../components/Home'
 
 const App = () => {
   return (
-    <div>
-      <Button className='bg-green-400 cursor-pointer'>Click me </Button>
-    </div>
+    <BrowserRouter>
+      <Home />
+    </BrowserRouter>
   )
 }
 
