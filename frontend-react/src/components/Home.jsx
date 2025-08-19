@@ -1,6 +1,4 @@
 import React from 'react'
-import Header from './Header'
-import Footer from './Footer'
 import {
   Card,
   CardContent,
@@ -10,6 +8,8 @@ import {
   CardTitle,
 } from "@/components/ui/card"
 import { Button } from '@/components/ui/button'
+import Header from './Header'
+import Footer from './Footer'
 
 const Home = () => {
   return (
