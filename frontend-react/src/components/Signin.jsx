@@ -13,8 +13,8 @@ import {
 } from "@/components/ui/form"
 import { Input } from "@/components/ui/input"
 import { Link, useNavigate } from "react-router-dom"
-import { useState } from "react"
-import qs from "qs";
+import { useContext, useState } from "react"
+import { AuthContext } from "@/AuthProvider"
 
 const formSchema = z.object({
   username: z.string().min(2, { message: "Username must be at least 2 characters." }),
@@ -33,6 +33,8 @@ function Signin() {
   const [errors, setErrors] = useState({})
   const navigate = useNavigate()
 
+  const { isLoggedIn, setIsLoggedIn } = useContext(AuthContext)
+
   const onSubmit = async (values) => {
     try {
       const response = await axios.post(
@@ -40,6 +42,7 @@ function Signin() {
         values);
       localStorage.setItem('accessToken', response.data?.access)
       localStorage.setItem('refreshToken', response.data?.refresh)
+      setIsLoggedIn(true)
       console.log("Login successful", response.data);
       navigate("/");
       form.reset();
@@ -49,7 +52,7 @@ function Signin() {
     }
   };
 
-
+console.log(isLoggedIn)
   return (
     <Form {...form}>
       <form

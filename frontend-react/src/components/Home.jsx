@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useContext } from 'react'
 import {
   Card,
   CardContent,
@@ -10,8 +10,19 @@ import {
 import { Button } from '@/components/ui/button'
 import Header from './Header'
 import Footer from './Footer'
+import { AuthContext } from '@/AuthProvider'
+import { useNavigate } from 'react-router-dom'
 
 const Home = () => {
+  const { isLoggedIn, setIsLoggedIn } = useContext(AuthContext)
+  const navigate = useNavigate()
+
+  const handleClick = () => {
+    isLoggedIn ? 
+    navigate('/dashboard')
+    :
+    navigate('/signIn')
+  }
   return (
     <>
       <div className='min-h-screen flex flex-col'>
@@ -30,7 +41,7 @@ const Home = () => {
             </CardHeader>
 
             <CardFooter className="flex justify-center">
-              <Button className='cursor-pointer text-black bg-green-600 hover:bg-green-500 outline border-green-600 border'>Explore</Button>
+              <Button onClick={handleClick} className='cursor-pointer text-black bg-green-600 hover:bg-green-500 outline border-green-600 border'>Explore</Button>
             </CardFooter>
           </Card>
         </div>
