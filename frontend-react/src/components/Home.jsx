@@ -30,7 +30,7 @@ const Home = () => {
             </CardHeader>
 
             <CardFooter className="flex justify-center">
-              <Button className='cursor-pointer bg-green-600 hover:bg-white outline border-green-600 border'>Explore</Button>
+              <Button className='cursor-pointer text-black bg-green-600 hover:bg-green-500 outline border-green-600 border'>Explore</Button>
             </CardFooter>
           </Card>
         </div>

@@ -2,7 +2,6 @@ import { zodResolver } from "@hookform/resolvers/zod"
 import { useForm } from "react-hook-form"
 import { z } from "zod"
 import axios from "axios"
-
 import { Button } from "@/components/ui/button"
 import {
   Form,
@@ -15,43 +14,51 @@ import {
 import { Input } from "@/components/ui/input"
 import { Link, useNavigate } from "react-router-dom"
 import { useState } from "react"
+import qs from "qs";
 
 const formSchema = z.object({
   username: z.string().min(2, { message: "Username must be at least 2 characters." }),
-  email: z.string().email({ message: "Invalid email address." }),
   password: z.string().min(8, { message: "Password must be at least 8 characters." }),
 })
 
-function Register() {
+function Signin() {
   const form = useForm({
     resolver: zodResolver(formSchema),
     defaultValues: {
       username: "",
-      email: "",
       password: "",
     },
   })
+
   const [errors, setErrors] = useState({})
   const navigate = useNavigate()
 
   const onSubmit = async (values) => {
     try {
-      const response = await axios.post("http://127.0.0.1:8000/api/v1/register/", values);
-      console.log("Registration successful:", response.data);
-      navigate('/signIn');
-      form.reset()
+      const response = await axios.post(
+        "http://127.0.0.1:8000/api/v1/token/",
+        values);
+      localStorage.setItem('accessToken', response.data?.access)
+      localStorage.setItem('refreshToken', response.data?.refresh)
+      console.log("Login successful", response.data);
+      navigate("/");
+      form.reset();
     } catch (error) {
-      setErrors(error.response.data)
-      alert(error.response.data?.username || error.response.data?.email)
+      console.log("Backend error:", error.response?.data);
+      alert(error.response?.data?.detail || "Invalid credentials");
     }
-  }
-  console.log(errors)
+  };
+
 
   return (
     <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6 max-w-md mx-auto mt-10 p-6 bg-white rounded-xl shadow-md">
+      <form
+        onSubmit={form.handleSubmit(onSubmit)}
+        className="space-y-6 max-w-md mx-auto mt-10 p-6 bg-white rounded-xl shadow-md"
+      >
+
         <div className="text-center">
-          <h1 className="text-3xl font-bold text-gray-900 mb-2">Register</h1>
+          <h1 className="text-3xl font-bold text-gray-900 mb-2">Log In</h1>
           <p className="text-gray-600 text-sm">Access your account to continue</p>
         </div>
         <FormField
@@ -63,21 +70,8 @@ function Register() {
               <FormControl>
                 <Input placeholder="Enter your username" {...field} />
               </FormControl>
-              <FormMessage className='text-red-600' />
-            </FormItem>
-          )}
-        />
-
-        <FormField
-          control={form.control}
-          name="email"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Email</FormLabel>
-              <FormControl>
-                <Input type="email" placeholder="Enter your email" {...field} />
-              </FormControl>
-              <FormMessage className='text-red-600' />
+              <FormMessage className="text-red-600" />
+              {errors?.username && <p className="text-red-600 text-sm">{errors.username}</p>}
             </FormItem>
           )}
         />
@@ -91,23 +85,29 @@ function Register() {
               <FormControl>
                 <Input type="password" placeholder="Enter your password" {...field} />
               </FormControl>
-              <FormMessage className='text-red-600' />
+              <FormMessage className="text-red-600" />
+              {errors?.password && <p className="text-red-600 text-sm">{errors.password}</p>}
             </FormItem>
           )}
         />
 
-        <Button type="submit" className="w-full bg-green-600 hover:bg-green-500 cursor-pointer">Register</Button>
+        <Button type="submit" className="w-full bg-green-600 hover:bg-green-500 cursor-pointer">
+          Sign In
+        </Button>
+
 
         <div className="text-center text-sm text-gray-600">
           <p>Don't have an account?{" "}
-            <Link to="/signIn" className="font-medium text-green-600 hover:text-green-500">
-              Sign In
+            <Link to="/register" className="font-medium text-green-600 hover:text-green-500">
+              Sign up
             </Link>
           </p>
         </div>
       </form>
+
+
     </Form>
   )
 }
 
-export default Register
+export default Signin
